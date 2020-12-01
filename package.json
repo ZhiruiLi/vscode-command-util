@@ -1,6 +1,6 @@
 {
-  "name": "command-util",
-  "displayName": "command-util",
+  "name": "ditto",
+  "displayName": "ditto",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -10,14 +10,14 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:command-util.copyText"
+    "onCommand:ditto.copyText"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "command-util.copyText",
-        "title": "Command Util: Copy text"
+        "command": "ditto.copyText",
+        "title": "Ditto: Copy text"
       }
     ]
   },

@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import * as path from 'path';
 
 namespace log {
-	let logChan = vscode.window.createOutputChannel("CommandUtil");
+	let logChan = vscode.window.createOutputChannel("Ditto");
 
 	function now(): string {
 		return moment().format('YYYY-MM-DDThh:mm:ss');
@@ -27,7 +27,7 @@ function mayPlus(value: number | undefined, p: number): number {
 }
 
 function makeText(tmplString: string): string {
-	handlebars.registerHelper("path_basename", path.basename);
+	handlebars.registerHelper("path_basename", (s: string) => path.basename(s));
 	handlebars.registerHelper("path_dirname", path.dirname);
 	handlebars.registerHelper("path_extname", path.extname);
 	const tmpl = handlebars.compile(tmplString);
@@ -40,7 +40,6 @@ function makeText(tmplString: string): string {
 			},
 		},
 		"window": {
-
 		},
 	};
 	try {
@@ -51,7 +50,14 @@ function makeText(tmplString: string): string {
 	return "";
 }
 
-function commandCopyTextHandler(tmplString: string = "{{path_basename activeEditor.filePath}}:{{activeEditor.position.line}}") {
+function commandCopyTextHandler(tmplString: string = "") {
+	const txt = makeText(tmplString);
+	vscode.env.clipboard.writeText(txt).then(() => {
+		log.debug(`CopyText: write to clipboard done, data: '${txt}'`);
+	});
+};
+
+function commandExecuteHandler(tmplString: string = "") {
 	const txt = makeText(tmplString);
 	vscode.env.clipboard.writeText(txt).then(() => {
 		log.debug(`CopyText: write to clipboard done, data: '${txt}'`);
@@ -59,7 +65,7 @@ function commandCopyTextHandler(tmplString: string = "{{path_basename activeEdit
 };
 
 export function activate(context: vscode.ExtensionContext) {
-	const commandCopyText = 'command-util.copyText';
+	const commandCopyText = 'ditto.copyText';
 	context.subscriptions.push(vscode.commands.registerCommand(commandCopyText, commandCopyTextHandler));
 }
 

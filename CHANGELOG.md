@@ -1,6 +1,6 @@
 # Change Log
 
-All notable changes to the "command-util" extension will be documented in this file.
+All notable changes to the "ditto" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 

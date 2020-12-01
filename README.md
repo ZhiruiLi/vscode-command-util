@@ -1,6 +1,6 @@
-# command-util README
+# VSCode Ditto README
 
-This is the README for your extension "command-util". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "ditto". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 
