@@ -26,10 +26,18 @@ function mayPlus(value: number | undefined, p: number): number {
 	return value + p;
 }
 
-function makeText(tmplString: string): string {
+/**
+ * Register handlebars helper functions.
+ */
+function registerHelpers() {
 	handlebars.registerHelper("path_basename", (s: string) => path.basename(s));
 	handlebars.registerHelper("path_dirname", path.dirname);
 	handlebars.registerHelper("path_extname", path.extname);
+	handlebars.registerHelper("path_isAbsolute", path.isAbsolute);
+	handlebars.registerHelper("path_normalize", path.normalize);
+}
+
+function makeText(tmplString: string): string {
 	const tmpl = handlebars.compile(tmplString);
 	const data = {
 		"activeEditor": {
@@ -38,8 +46,7 @@ function makeText(tmplString: string): string {
 				"line": mayPlus(vscode.window.activeTextEditor?.selection.active.line, 1),
 				"column": mayPlus(vscode.window.activeTextEditor?.selection.active.character, 1),
 			},
-		},
-		"window": {
+			"languageId": vscode.window.activeTextEditor?.document.languageId,
 		},
 	};
 	try {
@@ -57,16 +64,18 @@ function commandCopyTextHandler(tmplString: string = "") {
 	});
 };
 
-function commandExecuteHandler(tmplString: string = "") {
-	const txt = makeText(tmplString);
-	vscode.env.clipboard.writeText(txt).then(() => {
-		log.debug(`CopyText: write to clipboard done, data: '${txt}'`);
-	});
+function commandExecuteHandler(cmdTmplString: string = "", ...argsTmplStrings: string[]) {
+	const cmdTxt = makeText(cmdTmplString);
+	const argsTxt = argsTmplStrings.map((v: string) => { return makeText(v); });
+	vscode.commands.executeCommand(cmdTxt, ...argsTxt);
 };
 
 export function activate(context: vscode.ExtensionContext) {
 	const commandCopyText = 'ditto.copyText';
+	const commandExecute = 'ditto.execute';
+	registerHelpers();
 	context.subscriptions.push(vscode.commands.registerCommand(commandCopyText, commandCopyTextHandler));
+	context.subscriptions.push(vscode.commands.registerCommand(commandExecute, commandExecuteHandler));
 }
 
 export function deactivate() { }
