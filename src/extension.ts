@@ -36,6 +36,8 @@ function registerHelpers() {
 	handlebars.registerHelper("path_isAbsolute", path.isAbsolute);
 	handlebars.registerHelper("path_normalize", path.normalize);
 	handlebars.registerHelper("path_relative", path.relative);
+	handlebars.registerHelper("add", (a, b) => a + b);
+	handlebars.registerHelper("sub", (a, b) => a - b);
 }
 
 function getWorkspaceFolder(): string {
