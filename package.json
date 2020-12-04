@@ -10,16 +10,12 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:ditto.copyText"
+    "onCommand:ditto.copyText",
+    "onCommand:ditto.execute"
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "ditto.copyText",
-        "title": "Ditto: Copy text"
-      }
-    ]
+    "commands": []
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

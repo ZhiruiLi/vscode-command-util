@@ -66,8 +66,10 @@ function commandCopyTextHandler(tmplString: string = "") {
 
 function commandExecuteHandler(cmdTmplString: string = "", ...argsTmplStrings: string[]) {
 	const cmdTxt = makeText(cmdTmplString);
-	const argsTxt = argsTmplStrings.map((v: string) => { return makeText(v); });
-	vscode.commands.executeCommand(cmdTxt, ...argsTxt);
+	const args = argsTmplStrings.map(v => JSON.parse(makeText(v)));
+	vscode.commands.executeCommand(cmdTxt, ...args).then(() => {
+		log.debug(`Execute: execute command done, command: '${cmdTxt}', arguments: ${args}`);
+	});
 };
 
 export function activate(context: vscode.ExtensionContext) {
