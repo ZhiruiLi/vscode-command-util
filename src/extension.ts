@@ -35,18 +35,41 @@ function registerHelpers() {
 	handlebars.registerHelper("path_extname", path.extname);
 	handlebars.registerHelper("path_isAbsolute", path.isAbsolute);
 	handlebars.registerHelper("path_normalize", path.normalize);
+	handlebars.registerHelper("path_relative", path.relative);
+}
+
+function getWorkspaceFolder(): string {
+	const editor = vscode.window.activeTextEditor;
+	if (editor) {
+		const res = editor.document.uri;
+		const folder = vscode.workspace.getWorkspaceFolder(res);
+		if (folder) {
+			return folder.uri.fsPath;
+		}
+	}
+	return "";
 }
 
 function makeText(tmplString: string): string {
 	const tmpl = handlebars.compile(tmplString);
 	const data = {
 		"activeEditor": {
-			"filePath": vscode.window.activeTextEditor?.document.fileName,
-			"position": {
-				"line": mayPlus(vscode.window.activeTextEditor?.selection.active.line, 1),
-				"column": mayPlus(vscode.window.activeTextEditor?.selection.active.character, 1),
+			"document": {
+				"filePath": vscode.window.activeTextEditor?.document.uri.fsPath,
+				"folderPath": getWorkspaceFolder(),
+				"languageId": vscode.window.activeTextEditor?.document.languageId,
 			},
-			"languageId": vscode.window.activeTextEditor?.document.languageId,
+			"selection": {
+				"anchor": {
+					"line": vscode.window.activeTextEditor?.selection.anchor.line,
+					"character": vscode.window.activeTextEditor?.selection.anchor.character,
+				},
+				"active": {
+					"line": vscode.window.activeTextEditor?.selection.active.line,
+					"character": vscode.window.activeTextEditor?.selection.active.character,
+				},
+				"isReversed": vscode.window.activeTextEditor?.selection.isReversed,
+			},
 		},
 	};
 	try {
